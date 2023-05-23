@@ -1,0 +1,193 @@
+using System;
+
+public class Person
+{
+    public string Name { get; set; }
+    public int Age { get; set; }
+    
+    public Person(string name, int age)
+    {
+        Name = name;
+        Age = age;
+    }
+}
+
+public class FootballPlayer : Person
+{
+    public int Number { get; set; }
+    public double Height { get; set; }
+    
+    public FootballPlayer(string name, int age, int number, double height)
+        : base(name, age)
+    {
+        Number = number;
+        Height = height;
+    }
+}
+
+public class Goalkeeper : FootballPlayer
+{
+    public Goalkeeper(string name, int age, int number, double height)
+        : base(name, age, number, height)
+    {
+    }
+}
+
+public class Defender : FootballPlayer
+{
+    public Defender(string name, int age, int number, double height)
+        : base(name, age, number, height)
+    {
+    }
+}
+
+public class Midfielder : FootballPlayer
+{
+    public Midfielder(string name, int age, int number, double height)
+        : base(name, age, number, height)
+    {
+    }
+}
+
+public class Striker : FootballPlayer
+{
+    public Striker(string name, int age, int number, double height)
+        : base(name, age, number, height)
+    {
+    }
+}
+
+public class Coach : Person
+{
+    public Coach(string name, int age)
+        : base(name, age)
+    {
+    }
+}
+
+public class Referee : Person
+{
+    public Referee(string name, int age)
+        : base(name, age)
+    {
+    }
+}
+
+public class Team
+{
+    public Coach Coach { get; set; }
+    public FootballPlayer[] Players { get; set; }
+    
+    public double AveragePlayerAge
+    {
+        get
+        {
+            int totalAge = 0;
+            foreach (FootballPlayer player in Players)
+            {
+                totalAge += player.Age;
+            }
+            return (double)totalAge / Players.Length;
+        }
+    }
+    
+    public Team(Coach coach, FootballPlayer[] players)
+    {
+        Coach = coach;
+        Players = players;
+    }
+}
+
+public class Game
+{
+    public Team Team1 { get; set; }
+    public Team Team2 { get; set; }
+    public Referee Referee { get; set; }
+    public Person[] AssistantReferees { get; set; }
+    public Goal[] Goals { get; set; }
+    public string Result { get; set; }
+    public Team Winner { get; set; }
+    
+    public Game(Team team1, Team team2, Referee referee, Person[] assistantReferees)
+    {
+        Team1 = team1;
+        Team2 = team2;
+        Referee = referee;
+        AssistantReferees = assistantReferees;
+    }
+    
+    public void AddGoal(int minute, FootballPlayer player)
+    {
+        Goal goal = new Goal(minute, player);
+        if (Goals == null)
+        {
+            Goals = new Goal[] { goal };
+        }
+        else
+        {
+            Array.Resize(ref Goals, Goals.Length + 1);
+            Goals[Goals.Length - 1] = goal;
+        }
+    }
+    
+    public void SetResult(string result, Team winner)
+    {
+        Result = result;
+        Winner = winner;
+    }
+}
+
+public class Goal
+{
+    public int Minute { get; set; }
+    public FootballPlayer Player { get; set; }
+    
+    public Goal(int minute, FootballPlayer player)
+    {
+        Minute = minute;
+        Player = player;
+    }
+}
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        Goalkeeper goalkeeper1 = new Goalkeeper("John", 25, 1, 185);
+        Defender defender1 = new Defender("Michael", 28, 5, 180);
+        Defender defender2 = new Defender("David", 26, 3, 175);
+        Midfielder midfielder1 = new Midfielder("Daniel", 24, 8, 170);
+        Midfielder midfielder2 = new Midfielder("Andrew", 27, 6, 175);
+        Striker striker1 = new Striker("Robert", 23, 9, 180);
+
+        Coach coach1 = new Coach("Steve", 45);
+
+        FootballPlayer[] team1Players = { goalkeeper1, defender1, defender2, midfielder1, midfielder2, striker1 };
+        Team team1 = new Team(coach1, team1Players);
+
+        Goalkeeper goalkeeper2 = new Goalkeeper("Thomas", 27, 1, 190);
+        Defender defender3 = new Defender("Peter", 29, 4, 185);
+        Defender defender4 = new Defender("Richard", 28, 2, 180);
+        Midfielder midfielder3 = new Midfielder("James", 26, 7, 175);
+        Midfielder midfielder4 = new Midfielder("Joseph", 25, 10, 170);
+        Striker striker2 = new Striker("William", 24, 11, 185);
+        
+        FootballPlayer[] team2Players = { goalkeeper2, defender3, defender4, midfielder3, midfielder4, striker2 };
+        Team team2 = new Team(coach1, team2Players);
+
+        Referee referee = new Referee("Mark", 40);
+
+        Game game = new Game(team1, team2, referee, new Person[2]);
+        
+        // Добавяне на голове
+        game.AddGoal(15, striker1);
+        game.AddGoal(30, striker2);
+
+        game.SetResult("2-1", team1);
+
+        Console.WriteLine("Result: " + game.Result);
+        Console.WriteLine("Winner: " + game.Winner.Coach.Name);
+        Console.WriteLine("Average player age in Team 1: " + team1.AveragePlayerAge);
+        Console.WriteLine("Average player age in Team 2: " + team2.AveragePlayerAge);
+    }
+}
